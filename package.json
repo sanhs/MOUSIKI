@@ -1,0 +1,20 @@
+{
+  "name": "gpm",
+  "version": "1.0.0",
+  "description": "google play music",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "l",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.3",
+    "inquirer": "^5.1.0",
+    "lodash": "^4.17.5",
+    "playmusic": "^2.3.0"
+  },
+  "devDependencies": {
+    "log4js": "^2.5.3"
+  }
+}
