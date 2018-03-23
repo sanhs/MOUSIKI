@@ -9,10 +9,12 @@
   "author": "l",
   "license": "MIT",
   "dependencies": {
+    "async": "^2.6.0",
     "express": "^4.16.3",
     "inquirer": "^5.1.0",
     "lodash": "^4.17.5",
-    "playmusic": "^2.3.0"
+    "playmusic": "^2.3.0",
+    "youtube-dl": "^1.12.2"
   },
   "devDependencies": {
     "log4js": "^2.5.3"
