@@ -1,9 +1,6 @@
-const fs = require('fs');
-const EventEmitter = require('events');
-const youtubedl = require('youtube-dl');
-const randomstring = require('randomstring');
-
-const opfolder = "/media/l/C09021D69021D426/music/mousiki";
+const fs = require('fs')
+const EventEmitter = require('events')
+const youtubedl = require('youtube-dl')
 
 
 /**
@@ -12,7 +9,7 @@ const opfolder = "/media/l/C09021D69021D426/music/mousiki";
 * @param outputFile
 * @return Event
 */
-var download = function(url, outputFile, options) {
+var download = function (url, outputFile, options) {
 	var dl = youtubedl(url, options, {maxBuffer: Infinity});
 	const downloadEmitter = new EventEmitter();
 	var aborted = false;
@@ -39,7 +36,7 @@ var download = function(url, outputFile, options) {
 
 		if (size) {
 			var percent = (pos / size * 100).toFixed(2);
-			process.stdout.cursorTo(1);
+			process.stdout.cursorTo(2);
 			process.stdout.write(percent + "%");
 			process.stdout.cursorTo(25);
 			process.stdout.write(Array(Math.floor(percent/5)).join("█") + Array(Math.floor(21-percent/5)).join("░"));
@@ -51,11 +48,13 @@ var download = function(url, outputFile, options) {
 		if (aborted) {
 			return;
 		}
+		downloadEmitter.emit('end');
 		console.log("Download Complete..");
 	});
 
 	dl.on('error', function(error) {
-		downloadEmitter.emit('error', new Error(error));
+		downloadEmitter.emit('end', new Error(error));
+		console.log("ERROR:\n", error)
 	});
 
 	function abort() {
@@ -67,23 +66,18 @@ var download = function(url, outputFile, options) {
 			fs.unlinkSync(outputFile);
 		}
 	}
-
-	downloadEmitter.on('abort', abort);
+	dl.on('abort', abort);
 
 	return downloadEmitter;
 };
 
 
-var downloadVideo = function(url, outputFile) {
+exports.downloadVideo = function(url, outputFile) {
 	var options = ['-f', 'bestvideo/best', '--no-check-certificate', '--format=18'];
-	var opfile = opfolder + randomstring.generate(10) + '.mp4';
-	download(url, outputFile, options);
+	return download(url, outputFile, options);
 }
 
-var downloadAudio = function(url, outputFile) {
+exports.downloadAudio = function(url, outputFile) {
 	var options = ['-f', 'bestaudio/best', '--no-check-certificate'];
-	var opfile = opfolder + randomstring.generate(10) + '.mp3';
-	download(url, outputFile, options);
+	return download(url, outputFile, options);
 }
-
-downloadAudio("https://www.youtube.com/watch?v=Eyn6ZkS4cpc", opfile);
