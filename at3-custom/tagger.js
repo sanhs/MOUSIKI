@@ -269,7 +269,7 @@ var getInfosWithYoutubeDl = function (url) {
 exports.getYoutubeInfo = getInfosWithYoutubeDl;
 
 
-var tagFile = function (file, infos) {
+var tagFile = function (file, infos, rename) {
 	var meta = {
 		title: infos.title,
 		artist: infos.artistName
@@ -298,6 +298,7 @@ var tagFile = function (file, infos) {
 	function renameFile(file, filename) {
 		var f = file.split('/');
 		f.pop();
+		filename = filename.replace(/[\/\\,+()~'":*?<>{}]/g, '');
 		f = f.join('/') + '/' + filename + '.mp3';
 		fs.renameSync(file, f);
 	}
@@ -316,7 +317,7 @@ var tagFile = function (file, infos) {
 					const coverFile = sharp(coverPath);
 					coverFile.metadata().then(metadata => {
 						if (metadata.width != metadata.height) {
-							console.log(metadata.width + 'x' + metadata.height);
+							// console.log(metadata.width + 'x' + metadata.height);
 							var crop_size = 600
 							// In that case we will crop the cover to get a square
 							const tempCoverPath = file + '.cover.resized.jpg';
@@ -349,7 +350,7 @@ var tagFile = function (file, infos) {
 	});
 
 };
-
+exports.tagFile = tagFile;
 
 // take title and artist along with url to search for tags, 
 // in case you can't find the tags then go with this as the last resort.
